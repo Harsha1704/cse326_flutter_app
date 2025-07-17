@@ -7,34 +7,40 @@
    <link rel="stylesheet"  href="style.css">
 </head>
 <body>
-    <div id="b1">
-        <div class="dropdown">
-            <a href="javascript:void(0)" class="dropbtn" >Home</a>
-            <div class="dropdown-content">
-                <a href="about/about.html">About Me</a>
-                <a href="References.html">References</a>
-            </div>
-        </div>
-        <div class="dropdown">
-            <a href="javascript:void(0)" class="dropbtn">Topics</a>
-            <div class="dropdown-content">
-                <a href="hosticalplaces.html">Historical places </a>
-                <a href="airports.html">Airports</a>
-            </div>
-        </div>
-        <div class="dropdown">
-            <a href="javascript:void(0)" class="dropbtn">Services</a>
-            <div class="dropdown-content">
-                <a href="contact.html">Contact</a>
-                
-            </div>
-        </div>
-        <div class="search-container">
-        <input type="text" id="stateInput" placeholder="Enter state name" />
-        <div id="suggestions" class="suggestions"></div>
-        <button id="searchButton">Search</button>
-        </div>
+   <header>
+  <div class="logo">🌍 My Map</div>
+   <div class="search-container">
+    <input type="text" id="stateInput" placeholder="Enter state name" />
+    <div id="suggestions" class="suggestions"></div>
+    <button id="searchButton">Search</button>
+  </div>
+  <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+</header>
+
+<div class="sidebar" id="sidebar">
+  <div class="dropdown">
+    <a class="expandable">Home ▾</a>
+    <div class="dropdown-content">
+      <a href="about/about.html" target="_self">About Me</a>
+      <a href="References.html" target="_self">References</a>
     </div>
+  </div>
+  <div class="dropdown">
+    <a class="expandable">Topics ▾</a>
+    <div class="dropdown-content">
+      <a href="historicalplaces.html" target="_self">Historical Places</a>
+      <a href="airports.html" target="_self">Airports</a>
+    </div>
+  </div>
+  <div class="dropdown">
+    <a class="expandable">Services ▾</a>
+    <div class="dropdown-content">
+      <a href="contact.html" target="_self">Contact</a>
+    </div>
+  </div>
+  <span class="close-btn" onclick="toggleSidebar()">×</span>
+</div>
+
     <br>
     <div id="map">
     <?xml version="1.0" encoding="utf-8"?>
@@ -621,7 +627,14 @@ const states = [
 
      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
- 
+ <script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const isOpen = sidebar.style.right === '0px';
+    sidebar.style.right = isOpen ? '-260px' : '0px';
+  }
+</script>
+
  
 
 </body>
