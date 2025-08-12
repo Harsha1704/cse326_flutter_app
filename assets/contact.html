@@ -5,35 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Me</title>
     <style>
+/* ===== SIDEBAR STYLES FROM MAIN_PAGE.HTML ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
-    font-family: 'Verdana', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: #f9fafb;
-    color: #333;
-    line-height: 1.5;
+  font-family: 'Verdana', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f9fafb;
+  color: #333;
+  line-height: 1.5;
 }
 
-
+/* ===== HEADER ===== */
 header {
-    text-align: center;
-    padding: 2rem;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  background: #0f2027;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1001;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
-h1 {
-    font-size: 2.2rem;
-    margin: 0.5rem 0;
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #FFD700;
 }
 
-p {
-    font-size: 1rem;
-    color: #555;
+.menu-icon {
+  font-size: 30px;
+  color: #FFD700;
+  cursor: pointer;
 }
 
+/* ===== SIDEBAR ===== */
+.sidebar {
+  position: fixed;
+  top: 60px;
+  right: -260px;
+  width: 260px;
+  height: 100%;
+  background: rgba(15, 15, 15, 0.95);
+  padding: 20px;
+  transition: right 0.4s ease-in-out;
+  z-index: 1000;
+  overflow-y: auto;
+  backdrop-filter: blur(10px);
+  border-left: 2px solid #FFD700;
+}
+
+.sidebar a {
+  color: #FFD700;
+  display: block;
+  font-size: 18px;
+  padding: 12px 0;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sub-menu {
+  margin-left: 15px;
+  display: none;
+}
+
+.sidebar .expandable {
+  cursor: pointer;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* ===== CONTACT PAGE STYLES (ORIGINAL) ===== */
 .contact-container {
     display: flex;
     justify-content: center;
@@ -70,7 +133,6 @@ p {
 .contact-card a:hover {
     text-decoration: underline;
 }
-
 
 form {
     margin-top: 1.5rem;
@@ -132,6 +194,132 @@ button:hover {
     color: #007BFF;
 }
 
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #ffffff;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.9rem;
+}
+
+/* Adjust main content to account for fixed header */
+main {
+    padding-top: 100px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    right: -200px;
+  }
+
+  .sidebar a {
+    font-size: 16px;
+  }
+
+  .close-btn {
+    font-size: 24px;
+  }
+
+  .logo {
+    font-size: 15px;
+  }
+
+  .menu-icon {
+    font-size: 26px;
+  }
+}
+
+.contact-card {
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+}
+
+.contact-card h2 {
+    margin: 0.5rem 0;
+    font-size: 1.5rem;
+    color: #007BFF;
+}
+
+.contact-card p {
+    margin: 1rem 0;
+    color: #777;
+}
+
+.contact-card a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.contact-card a:hover {
+    text-decoration: underline;
+}
+
+form {
+    margin-top: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.extra-info {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.extra-info h3 {
+    font-size: 1.5rem;
+    color: #007BFF;
+}
+
+.social-links a {
+    margin: 0 0.5rem;
+    text-decoration: none;
+    font-weight: bold;
+    color: #555;
+}
+
+.social-links a:hover {
+    color: #007BFF;
+}
 
 footer {
     text-align: center;
@@ -141,12 +329,32 @@ footer {
     font-size: 0.9rem;
 }
 
+/* Adjust main content to account for fixed header */
+main {
+    padding-top: 50px;
+}
+
     </style>
 </head>
 <body>
-    <header>
-        <h1>Contact Me</h1>
-    </header>
+  <header>
+    <div class="logo">🌍 Contact Us</div>
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <nav class="sidebar" id="sidebar">
+      <a class="expandable" onclick="toggleSubMenu('homeSub')">Home ▾</a>
+      <div class="sub-menu" id="homeSub">
+        <a href="about/about.html" target="_self">About Me</a>
+        <a href="References.html" target="_self">References</a>
+      </div>
+      <a class="expandable" onclick="toggleSubMenu('topicsSub')">Topics ▾</a>
+      <div class="sub-menu" id="topicsSub">
+        <a href="historicalplaces.html" target="_self">Historical Places</a>
+        <a href="airports.html" target="_self">Airports</a>
+      </div>
+      <a href="contact.html" target="_self">Contact</a>
+      <span class="close-btn" onclick="toggleSidebar()">×</span>
+    </nav>
+  </header>
     <main>
         <section class="contact-container">
             <div class="contact-card">
@@ -183,7 +391,28 @@ footer {
         <p>&copy; 2024 Your Harsha.Built with creativity. </p>
     </footer>
     <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.style.right = (sidebar.style.right === "0px") ? "-260px" : "0px";
+        }
 
+        function toggleSubMenu(id) {
+            const menu = document.getElementById(id);
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuIcon = document.querySelector('.menu-icon');
+            const closeBtn = document.querySelector('.close-btn');
+            
+            if (!sidebar.contains(event.target) && 
+                !menuIcon.contains(event.target) && 
+                !closeBtn.contains(event.target)) {
+                sidebar.style.right = "-260px";
+            }
+        });
     </script>
 </body>
 </html>

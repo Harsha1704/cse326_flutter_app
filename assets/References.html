@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+/* ===== SIDEBAR STYLES FROM MAIN_PAGE.HTML ===== */
 * {
     margin: 0;
     padding: 0;
@@ -17,6 +18,81 @@ body {
     color: #333;
 }
 
+/* ===== HEADER ===== */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    background: #0f2027;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1001;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+.menu-icon {
+    font-size: 30px;
+    color: #FFD700;
+    cursor: pointer;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    position: fixed;
+    top: 60px;
+    right: -260px;
+    width: 260px;
+    height: 100%;
+    background: rgba(15, 15, 15, 0.95);
+    padding: 20px;
+    transition: right 0.4s ease-in-out;
+    z-index: 1000;
+    overflow-y: auto;
+    backdrop-filter: blur(10px);
+    border-left: 2px solid #FFD700;
+}
+
+.sidebar a {
+    color: #FFD700;
+    display: block;
+    font-size: 18px;
+    padding: 12px 0;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.sidebar a:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sub-menu {
+    margin-left: 15px;
+    display: none;
+}
+
+.sidebar .expandable {
+    cursor: pointer;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #fff;
+}
+
+/* ===== REFERENCES PAGE STYLES (ORIGINAL) ===== */
 .container {
     width: 80%;
     margin: auto;
@@ -74,6 +150,35 @@ body {
     text-decoration: underline;
 }
 
+/* Adjust main content to account for fixed header */
+main {
+    padding-top: 100px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+        right: -200px;
+    }
+
+    .sidebar a {
+        font-size: 16px;
+    }
+
+    .close-btn {
+        font-size: 24px;
+    }
+
+    .logo {
+        font-size: 15px;
+    }
+
+    .menu-icon {
+        font-size: 26px;
+    }
+}
+
 @media (max-width: 600px) {
     .container {
         width: 90%;
@@ -91,6 +196,26 @@ body {
     </style>
 </head>
 <body>
+  <header>
+    <div class="logo">🌍References</div>
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <nav class="sidebar" id="sidebar">
+      <a class="expandable" onclick="toggleSubMenu('homeSub')">Home ▾</a>
+      <div class="sub-menu" id="homeSub">
+        <a href="about/about.html" target="_self">About Me</a>
+        <a href="References.html" target="_self">References</a>
+      </div>
+      <a class="expandable" onclick="toggleSubMenu('topicsSub')">Topics ▾</a>
+      <div class="sub-menu" id="topicsSub">
+        <a href="historicalplaces.html" target="_self">Historical Places</a>
+        <a href="airports.html" target="_self">Airports</a>
+      </div>
+      <a href="contact.html" target="_self">Contact</a>
+      <span class="close-btn" onclick="toggleSidebar()">×</span>
+    </nav>
+  </header>
+
+  <main>
     <section class="references-section">
         <div class="container">
             <h1>References</h1>
@@ -117,22 +242,48 @@ body {
                     <h3>Google</h3>
                     <p>Images for historical places.<a href=""target="_blank">View  Site</a></p>
                 </div>
+            </div>
         </div>
     </section>
-    <script>
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('a').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            if (this.getAttribute("href").startsWith("#")) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute("href")).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
+  </main>
+
+  <script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.style.right = (sidebar.style.right === "0px") ? "-260px" : "0px";
+    }
+
+    function toggleSubMenu(id) {
+        const menu = document.getElementById(id);
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', function(event) {
+        const sidebar = document.getElementById('sidebar');
+        const menuIcon = document.querySelector('.menu-icon');
+        const closeBtn = document.querySelector('.close-btn');
+        
+        if (!sidebar.contains(event.target) && 
+            !menuIcon.contains(event.target) && 
+            !closeBtn.contains(event.target)) {
+            sidebar.style.right = "-260px";
+        }
+    });
+
+    // Original References.html script
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (this.getAttribute("href").startsWith("#")) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute("href")).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
     });
-});
-
-    </script>
+  </script>
 </body>
 </html>
