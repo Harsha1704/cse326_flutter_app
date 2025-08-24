@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorer's Challenge - Quiz Zone</title>
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        :root {
+            --primary-color: #FFD700; /* Gold */
+            --secondary-color: #0f2027; /* Dark Blue/Black */
+            --background-start: #f5f7fa;
+            --background-end: #c3cfe2;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ===== MAIN QUIZ CONTAINER ===== */
+        .quiz-container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        /* ===== USER PROFILE SUMMARY ===== */
+        .user-profile-summary {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 12px;
+        }
+        #user-name {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* ===== LOBBY SCREEN ===== */
+        .quiz-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .quiz-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .quiz-card .icon {
+            font-size: 3rem;
+        }
+        .quiz-card h3 {
+            margin-top: 10px;
+            color: var(--secondary-color);
+        }
+
+        /* ===== ACTIVE QUIZ SCREEN ===== */
+        #quiz-active .quiz-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        #question-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        #question-image {
+            max-width: 100%;
+            height: auto;
+            max-height: 250px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        #question-text {
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+        #options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .option-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+        .option-btn:hover:not(:disabled) {
+            background: #f0f0f0;
+            border-color: var(--primary-color);
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+        .option-btn.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+        .option-btn.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+        }
+
+        /* ===== RESULTS & LEADERBOARD SCREEN ===== */
+        #quiz-results, #leaderboard {
+            text-align: center;
+        }
+        #score-text, #points-earned {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        #review-answers {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .review-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .review-item p {
+            font-weight: bold;
+        }
+        .review-item .your-answer.correct {
+            color: var(--correct-color);
+        }
+         .review-item .your-answer.incorrect {
+            color: var(--incorrect-color);
+        }
+        #leaderboard-list {
+            list-style: none;
+            padding: 0;
+        }
+        #leaderboard-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        #leaderboard-list li:nth-child(odd) {
+            background: #f1f1f1;
+        }
+
+        /* ===== UTILITY & BUTTONS ===== */
+        .hidden {
+            display: none !important;
+        }
+        .action-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .action-button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="quiz-container">
+        <h1>Explorer's Challenge</h1>
+
+        <!-- User profile summary -->
+        <div class="user-profile-summary">
+            Welcome, <span id="user-name">Explorer</span>! | Travel Points: <span id="user-points">0</span>
+        </div>
+
+        <!-- Screen 1: Quiz Lobby (Visible by default) -->
+        <div id="quiz-lobby">
+            <h2>Choose Your Challenge</h2>
+            <div class="quiz-selection-grid">
+                <div class="quiz-card" data-quiz-id="up_history">
+                    <div class="icon">📜</div>
+                    <h3>Uttar Pradesh History</h3>
+                    <p>Test your knowledge of UP's rich past.</p>
+                </div>
+                <div class="quiz-card" data-quiz-id="image_quiz_monuments">
+                    <div class="icon">🏛️</div>
+                    <h3>Guess the Monument</h3>
+                    <p>Can you identify these famous landmarks?</p>
+                </div>
+                 <div class="quiz-card" data-quiz-id="kerala_culture">
+                    <div class="icon">🌴</div>
+                    <h3>Kerala Culture & Places</h3>
+                    <p>Explore the wonders of God's Own Country.</p>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button id="leaderboard-btn" class="action-button">View Leaderboard</button>
+            </div>
+        </div>
+
+        <!-- Screen 2: Active Quiz (Hidden by default) -->
+        <div id="quiz-active" class="hidden">
+            <h2 id="quiz-title"></h2>
+            <div class="quiz-progress">
+                <span id="question-counter"></span>
+                <span id="timer">Time: 15</span>
+            </div>
+            <div id="question-container">
+                <img id="question-image" class="hidden" alt="Quiz Image">
+                <p id="question-text"></p>
+            </div>
+            <div id="options-container">
+                <!-- Option buttons will be generated by JavaScript -->
+            </div>
+            <div style="text-align: center;">
+                <button id="next-question-btn" class="action-button hidden">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Screen 3: Quiz Results (Hidden by default) -->
+        <div id="quiz-results" class="hidden">
+            <h2>Challenge Complete!</h2>
+            <p id="score-text"></p>
+            <p id="points-earned"></p>
+            <div id="review-answers">
+                <h3>Review Your Answers:</h3>
+                <!-- Answer review will be generated by JavaScript -->
+            </div>
+            <button id="back-to-lobby-btn" class="action-button">Back to Quiz Zone</button>
+        </div>
+        
+        <!-- Screen 4: Leaderboard (Hidden by default) -->
+        <div id="leaderboard" class="hidden">
+            <h2>Leaderboard</h2>
+            <ol id="leaderboard-list">
+                <!-- Leaderboard will be generated by JavaScript -->
+            </ol>
+             <button id="back-to-lobby-from-leaderboard-btn" class="action-button">Back to Quiz Zone</button>
+        </div>
+    </main>
+
+    <script>
+        // --- DATA "DATABASES" ---
+
+        // In a real app, this user data would come from your login system.
+        let currentUser = {
+            name: "Explorer",
+            points: 150 
+        };
+
+        // In a real app, this would be stored and retrieved from a server.
+        let leaderboardData = [
+            { name: "WandererAlex", score: 2500 },
+            { name: "HistoryBuff", score: 2350 },
+            { name: "TempleRunner", score: 2100 },
+            { name: "Priya", score: 1800 },
+            { name: "Explorer", score: 150 } // Current user's score for context
+        ];
+
+        const quizzes = {
+            "up_history": {
+                title: "Uttar Pradesh History",
+                questions: [
+                    { question: "The Taj Mahal was built in memory of whom?", options: ["Jahanara Begum", "Mumtaz Mahal", "Roshanara Begum", "Nur Jahan"], correctAnswer: "Mumtaz Mahal" },
+                    { question: "Varanasi, one of the world's oldest cities, is situated on the banks of which river?", options: ["Yamuna", "Sarayu", "Ganges", "Gomti"], correctAnswer: "Ganges" },
+                    { question: "The Agra Fort was the main residence of the emperors of which dynasty?", options: ["Maurya", "Gupta", "Mughal", "Lodi"], correctAnswer: "Mughal" }
+                ]
+            },
+            "image_quiz_monuments": {
+                title: "Guess the Monument",
+                questions: [
+                    { image: 'https://whc.unesco.org/uploads/thumbs/site_0252_0008-750-750-20151104113424.jpg', question: "Identify this iconic white marble mausoleum.", options: ["Humayun's Tomb", "Bibi Ka Maqbara", "Victoria Memorial", "Taj Mahal"], correctAnswer: "Taj Mahal" },
+                    { image: 'https://upload.wikimedia.org/wikipedia/commons/4/41/East_facade_Hawa_Mahal_Jaipur_from_ground_level_%28July_2022%29_-_img_01.jpg', question: "This 'Palace of Winds' is a famous landmark in which city?", options: ["Udaipur", "Jaipur", "Jodhpur", "Delhi"], correctAnswer: "Jaipur" }
+                ]
+            },
+             "kerala_culture": {
+                title: "Kerala Culture & Places",
+                questions: [
+                    { question: "What is the name of the famous backwaters lake in Kumarakom?", options: ["Ashtamudi Lake", "Vembanad Lake", "Sasthamcotta Lake", "Pookode Lake"], correctAnswer: "Vembanad Lake" },
+                    { question: "The largest fort in Kerala, known for its keyhole shape, is:", options: ["St. Angelo Fort", "Palakkad Fort", "Bekal Fort", "Thalassery Fort"], correctAnswer: "Bekal Fort" },
+                    { question: "The annual Onam festival is closely associated with which temple?", options: ["Padmanabhaswamy Temple", "Guruvayur Temple", "Sabarimala Temple", "Thrikkakara Temple"], correctAnswer: "Thrikkakara Temple" }
+                ]
+            }
+        };
+
+        // --- DOM ELEMENT REFERENCES ---
+        const lobbyScreen = document.getElementById('quiz-lobby');
+        const activeQuizScreen = document.getElementById('quiz-active');
+        const resultsScreen = document.getElementById('quiz-results');
+        const leaderboardScreen = document.getElementById('leaderboard');
+
+        // --- QUIZ STATE VARIABLES ---
+        let currentQuizId = null;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let pointsEarned = 0;
+        let userAnswers = [];
+        let timerInterval;
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupLobby();
+            updateUserProfileSummary();
+        });
+
+        function setupLobby() {
+            // Show lobby and hide others
+            lobbyScreen.classList.remove('hidden');
+            activeQuizScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            leaderboardScreen.classList.add('hidden');
+
+            // Add event listeners to quiz cards
+            document.querySelectorAll('.quiz-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    startQuiz(card.dataset.quizId);
+                });
+            });
+
+            // Leaderboard button
+            document.getElementById('leaderboard-btn').addEventListener('click', showLeaderboard);
+            document.getElementById('back-to-lobby-from-leaderboard-btn').addEventListener('click', setupLobby);
+        }
+        
+        function updateUserProfileSummary() {
+            document.getElementById('user-name').textContent = currentUser.name;
+            document.getElementById('user-points').textContent = currentUser.points;
+        }
+
+        // --- QUIZ FLOW FUNCTIONS ---
+
+        function startQuiz(quizId) {
+            currentQuizId = quizId;
+            currentQuestionIndex = 0;
+            score = 0;
+            pointsEarned = 0;
+            userAnswers = [];
+
+            lobbyScreen.classList.add('hidden');
+            activeQuizScreen.classList.remove('hidden');
+            
+            document.getElementById('quiz-title').textContent = quizzes[quizId].title;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetQuestionUI();
+            const quiz = quizzes[currentQuizId];
+            const question = quiz.questions[currentQuestionIndex];
+            
+            // Update UI elements
+            document.getElementById('question-counter').textContent = `Question ${currentQuestionIndex + 1} of ${quiz.questions.length}`;
+            document.getElementById('question-text').textContent = question.question;
+
+            const questionImage = document.getElementById('question-image');
+            if (question.image) {
+                questionImage.src = question.image;
+                questionImage.classList.remove('hidden');
+            } else {
+                questionImage.classList.add('hidden');
+            }
+
+            const optionsContainer = document.getElementById('options-container');
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.addEventListener('click', () => selectAnswer(button, option));
+                optionsContainer.appendChild(button);
+            });
+            
+            startTimer();
+        }
+
+        function selectAnswer(selectedButton, selectedAnswer) {
+            clearInterval(timerInterval);
+            const quiz = quizzes[currentQuizId];
+            const correct = selectedAnswer === quiz.questions[currentQuestionIndex].correctAnswer;
+
+            userAnswers.push({
+                question: quiz.questions[currentQuestionIndex].question,
+                selected: selectedAnswer,
+                correct: quiz.questions[currentQuestionIndex].correctAnswer,
+                isCorrect: correct
+            });
+
+            if (correct) {
+                score++;
+                pointsEarned += 10; // Base points
+                selectedButton.classList.add('correct');
+            } else {
+                selectedButton.classList.add('incorrect');
+            }
+
+            // Highlight the correct answer
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                if (btn.textContent === quiz.questions[currentQuestionIndex].correctAnswer) {
+                    btn.classList.add('correct');
+                }
+                btn.disabled = true; // Disable all options
+            });
+            
+            document.getElementById('next-question-btn').classList.remove('hidden');
+        }
+        
+        document.getElementById('next-question-btn').addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizzes[currentQuizId].questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        function showResults() {
+            activeQuizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            const quiz = quizzes[currentQuizId];
+            currentUser.points += pointsEarned;
+            updateUserProfileSummary();
+            
+            document.getElementById('score-text').textContent = `You scored: ${score} out of ${quiz.questions.length}`;
+            document.getElementById('points-earned').textContent = `You earned ${pointsEarned} Travel Points!`;
+            
+            const reviewContainer = document.getElementById('review-answers');
+            reviewContainer.innerHTML = '<h3>Review Your Answers:</h3>'; // Clear previous review
+            userAnswers.forEach(answer => {
+                const item = document.createElement('div');
+                item.className = 'review-item';
+                item.innerHTML = `
+                    <p>${answer.question}</p>
+                    <span class="your-answer ${answer.isCorrect ? 'correct' : 'incorrect'}">Your answer: ${answer.selected}</span>
+                    ${!answer.isCorrect ? `<br><span class="correct-answer">Correct answer: ${answer.correct}</span>` : ''}
+                `;
+                reviewContainer.appendChild(item);
+            });
+
+            document.getElementById('back-to-lobby-btn').addEventListener('click', setupLobby);
+        }
+
+        function showLeaderboard() {
+            lobbyScreen.classList.add('hidden');
+            leaderboardScreen.classList.remove('hidden');
+            
+            const list = document.getElementById('leaderboard-list');
+            list.innerHTML = '';
+            
+            // Sort leaderboard by score
+            leaderboardData.sort((a, b) => b.score - a.score);
+            
+            leaderboardData.forEach(user => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${user.name}</span><strong>${user.score} points</strong>`;
+                list.appendChild(li);
+            });
+        }
+
+        function startTimer() {
+            let timeLeft = 15;
+            const timerEl = document.getElementById('timer');
+            timerEl.textContent = `Time: ${timeLeft}`;
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `Time: ${timeLeft}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // Automatically select a "wrong" answer to move on
+                    selectAnswer({classList: {add: () => {}}}, "Time's up!"); 
+                }
+            }, 1000);
+        }
+
+        function resetQuestionUI() {
+            clearInterval(timerInterval);
+            document.getElementById('options-container').innerHTML = '';
+            document.getElementById('next-question-btn').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

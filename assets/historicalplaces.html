@@ -30,6 +30,15 @@
         <a href="historicalplaces.html" target="_self">Historical Places</a>
         <a href="airports.html" target="_self">Airports</a>
       </div>
+       <a href="quizzes.html" target="_self">Quiz</a>
+
+  <!-- 🚆 Transportation -->
+  <a class="expandable" onclick="toggleSubMenu('transportSub')">Transportation ▾</a>
+  <div class="sub-menu" id="transportSub">
+    <a href="booking.html" target="_self">Book Tickets</a>
+    <a href="3dtransport.html" target="_self">3D Transport View</a>
+    <a href="videos.html" target="_self">Transport Videos</a>
+  </div>
       <a href="contact.html" target="_self">Contact</a>
       <span class="close-btn" onclick="toggleSidebar()">×</span>
     </nav>
@@ -100,6 +109,7 @@
     </div>
     <button id="saveButton">Save</button>
     <button id="closeButton">Close</button>
+    <button id="quizButton">Take Quiz</button>
   </div>
   <script>
     const stateContents = {
@@ -446,65 +456,94 @@
 
             
         };
-
 const paths = document.querySelectorAll('path');
 const stateInfo = document.getElementById('stateInfo');
 const stateName = document.getElementById('stateName');
 const closeButton = document.getElementById('closeButton');
 
+// Handle state click
 paths.forEach(path => {
-    path.addEventListener('click', function() {
+    path.addEventListener('click', function () {
         const currentState = this.getAttribute('title');
         stateName.textContent = currentState;
         const contentBox = document.getElementById('contentBox');
-        contentBox.innerHTML = ''; 
+        contentBox.innerHTML = '';
 
         if (stateContents[currentState]) {
             stateContents[currentState].images.forEach((image) => {
                 const imageContainer = document.createElement('div');
-                imageContainer.className = 'image-container'; 
+                imageContainer.className = 'image-container';
 
-                const heading = document.createElement('h2'); 
+                const heading = document.createElement('h2');
                 heading.textContent = image.heading;
 
                 const img = document.createElement('img');
-                img.src = image.src; 
-                img.alt = `Image of ${currentState}`; 
+                img.src = image.src;
+                img.alt = `Image of ${currentState}`;
 
                 const content = document.createElement('p');
-                content.textContent = image.content; 
+                content.textContent = image.content;
+
+                // Sidebar buttons (Travel, 3D Tour, Videos)
+                const buttonBox = document.createElement('div');
+                buttonBox.className = "button-box";
+
+                const travelBtn = document.createElement('button');
+                travelBtn.textContent = "🚆 Book Travel";
+                travelBtn.onclick = () => {
+                alert(`Booking options for ${currentState}`);
+                window.open("https://www.makemytrip.com/", "_blank");
+                };
+
+                const tourBtn = document.createElement('button');
+                tourBtn.textContent = "🌍 3D Tour";
+                tourBtn.onclick = () => {
+                alert(`Launching 3D Tour for ${currentState}`);
+                 window.open("https://sketchfab.com/3d-models", "_blank"); 
+                    };
+
+                const videoBtn = document.createElement('button');
+                videoBtn.textContent = "🎥 Watch Videos";
+                videoBtn.onclick = () => {
+                alert(`Showing videos about ${currentState}`);
+                window.open(`https://www.youtube.com/results?search_query=${currentState}+historical+places`, "_blank");
+                };
+                
+                buttonBox.appendChild(travelBtn);
+                buttonBox.appendChild(tourBtn);
+                buttonBox.appendChild(videoBtn);
 
                 const textBox = document.createElement('div');
-                textBox.className = 'text-box'; 
-                textBox.appendChild(content); 
+                textBox.className = 'text-box';
+                textBox.appendChild(content);
 
-                imageContainer.appendChild(heading); 
-                imageContainer.appendChild(img); 
-                imageContainer.appendChild(textBox); 
-                contentBox.appendChild(imageContainer); 
+                imageContainer.appendChild(heading);
+                imageContainer.appendChild(img);
+                imageContainer.appendChild(textBox);
+                imageContainer.appendChild(buttonBox);
+
+                contentBox.appendChild(imageContainer);
             });
         } else {
-            contentBox.innerHTML = 'No information available for this state. '; 
+            contentBox.innerHTML = 'No information available for this state.';
         }
 
-        stateInfo .style.display = 'block'; 
+        stateInfo.style.display = 'block';
     });
 });
 
-closeButton.addEventListener('click', function() {
-    stateInfo.style.display = 'none'; 
+// Close button
+closeButton.addEventListener('click', function () {
+    stateInfo.style.display = 'none';
 });
 
-document.getElementById('searchButton').addEventListener('click', function() {
-  
+// Search function
+document.getElementById('searchButton').addEventListener('click', function () {
     const stateName = document.getElementById('stateInput').value.trim().toLowerCase();
-    
-
     const paths = document.querySelectorAll('.land');
     paths.forEach(path => {
-        path.style.fill = '#ccc'; 
+        path.style.fill = '#ccc';
     });
-
 
     const stateMap = {
         'andaman and nicobar islands': 'IN-AN',
@@ -514,39 +553,36 @@ document.getElementById('searchButton').addEventListener('click', function() {
         'bihar': 'IN-BR',
         'chandigarh': 'IN-CH',
         'chhattisgarh': 'IN-CT',
-        'daman and diu':'IN-DD',
-        'delhi':'IN-DL',
-        'goa':'IN-GA',
-        'gujarat':'IN-GJ',
-        'himachal pradesh':'IN-HP',
-        'haryana':'IN-HR',
-        'jharkhand':'IN-JH',
-        'jammu and kashmir':'IN-JK',
-        'karnataka':'IN-KA',
-        'kerala':'IN-KL',
-        'lakshadweep':'IN-LD',
-        'maharashtra':'IN-MH',
-        'manipur':'IN-MN',
-        'meghalaya':'IN-ML',
-        'mizoram':'IN-MZ',
-        'nagaland':'IN-NL',
-        'odisha':'IN-OR',
-        'punjab':'IN-PB',
-        'rajasthan':'IN-RJ',
-        'sikkim':'IN-SK',
-        'tamil nadu':'IN-TN',
-        'telangana':'IN-TG',
-        'tripura':'IN-TR',
-        'uttar pradesh':'IN-UP',
-        'uttarkhand':'IN-UT',
-        'west bengal':'IN-WB',
-        'madhya pradesh':'IN-MP',
+        'daman and diu': 'IN-DD',
+        'delhi': 'IN-DL',
+        'goa': 'IN-GA',
+        'gujarat': 'IN-GJ',
+        'himachal pradesh': 'IN-HP',
+        'haryana': 'IN-HR',
+        'jharkhand': 'IN-JH',
+        'jammu and kashmir': 'IN-JK',
+        'karnataka': 'IN-KA',
+        'kerala': 'IN-KL',
+        'lakshadweep': 'IN-LD',
+        'maharashtra': 'IN-MH',
+        'manipur': 'IN-MN',
+        'meghalaya': 'IN-ML',
+        'mizoram': 'IN-MZ',
+        'nagaland': 'IN-NL',
+        'odisha': 'IN-OR',
+        'punjab': 'IN-PB',
+        'rajasthan': 'IN-RJ',
+        'sikkim': 'IN-SK',
+        'tamil nadu': 'IN-TN',
+        'telangana': 'IN-TG',
+        'tripura': 'IN-TR',
+        'uttar pradesh': 'IN-UP',
+        'uttarakhand': 'IN-UT',
+        'west bengal': 'IN-WB',
+        'madhya pradesh': 'IN-MP',
     };
 
-
     const pathId = stateMap[stateName];
-
-
     if (pathId) {
         const selectedPath = document.getElementById(pathId);
         if (selectedPath) {
@@ -556,79 +592,84 @@ document.getElementById('searchButton').addEventListener('click', function() {
         alert('State not found. Please try again.');
     }
 });
+
+// Search suggestions
 const states = [
-            'Andaman and Nicobar Islands',
-            'Andhra Pradesh',
-            'Arunachal Pradesh',
-            'Assam',
-            'Bihar',
-            'Chhattisgarh',
-            'Daman and Diu',
-            'Delhi',
-            'Goa',
-            'Gujarat',
-            'Himachal Pradesh',
-            'Haryana',
-            'Jharkhand',
-            'Jammu and Kashmir',
-            'Karnataka',
-            'Kerala',
-            'Maharashtra',
-            'Manipur',
-            'Meghalaya',
-            'Mizoram',
-            'Nagaland',
-            'Odisha',
-            'Punjab',
-            'Rajasthan',
-            'Sikkim',
-            'Tamil Nadu',
-            'Telangana',
-            'Tripura',
-            'Uttar Pradesh',
-            'Uttarakhand',
-            'West Bengal',
-            'Madhya Pradesh'
-        ];
+    'Andaman and Nicobar Islands',
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Daman and Diu',
+    'Delhi',
+    'Goa',
+    'Gujarat',
+    'Himachal Pradesh',
+    'Haryana',
+    'Jharkhand',
+    'Jammu and Kashmir',
+    'Karnataka',
+    'Kerala',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Madhya Pradesh'
+];
 
-        const stateInput = document.getElementById('stateInput');
-        const suggestionsDiv = document.getElementById('suggestions');
+const stateInput = document.getElementById('stateInput');
+const suggestionsDiv = document.getElementById('suggestions');
 
-        stateInput.addEventListener('input', () => {
-            const input = stateInput.value.toLowerCase();
-            suggestionsDiv.innerHTML = ''; // Clear previous suggestions
+stateInput.addEventListener('input', () => {
+    const input = stateInput.value.toLowerCase();
+    suggestionsDiv.innerHTML = '';
 
-            if (input) {
-                const filteredStates = states.filter(state => state.toLowerCase().includes(input));
-                filteredStates.forEach(state => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('suggestion-item');
-                    suggestionItem.textContent = state;
-                    suggestionItem.addEventListener('click', () => {
-                        stateInput.value = state; // Set input to selected suggestion
-                        suggestionsDiv.innerHTML = ''; // Clear suggestions
-                    });
-                    suggestionsDiv.appendChild(suggestionItem);
-                });
-            }
+    if (input) {
+        const filteredStates = states.filter(state => state.toLowerCase().includes(input));
+        filteredStates.forEach(state => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion-item');
+            suggestionItem.textContent = state;
+            suggestionItem.addEventListener('click', () => {
+                stateInput.value = state;
+                suggestionsDiv.innerHTML = '';
+            });
+            suggestionsDiv.appendChild(suggestionItem);
         });
-
-        
-  </script>
-     
-
-     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
- <script>
- function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.style.right = (sidebar.style.right === "0px") ? "-260px" : "0px";
     }
+});
 
-    function toggleSubMenu(id) {
-      const menu = document.getElementById(id);
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
+// Sidebar toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.style.right = (sidebar.style.right === "0px") ? "-260px" : "0px";
+}
+
+function toggleSubMenu(id) {
+    const menu = document.getElementById(id);
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+// Take Quiz button (redirect to quizzes.html)
+const quizBtn = document.getElementById('quizButton');
+if (quizBtn) {
+    quizBtn.onclick = () => {
+        window.location.href = "quizzes.html";  // Open quizzes.html in same tab
+    };
+}
+
 </script>
 
  

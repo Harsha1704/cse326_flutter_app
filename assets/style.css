@@ -312,3 +312,96 @@ svg {
   }
 }
 
+/* ===== NEW: ACTION BUTTONS IN POPUP ===== */
+.state-info button {
+  display: inline-block;
+  margin: 8px 6px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Quiz Button */
+#quizButton {
+  background: linear-gradient(135deg, #00b09b, #96c93d);
+  color: white;
+}
+#quizButton:hover {
+  background: linear-gradient(135deg, #019879, #7dbb2f);
+  transform: scale(1.05);
+}
+
+/* Transport Button */
+#transportButton {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+}
+#transportButton:hover {
+  background: linear-gradient(135deg, #162d56, #24427f);
+  transform: scale(1.05);
+}
+
+/* Save Button */
+#saveButton {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  color: white;
+}
+#saveButton:hover {
+  background: linear-gradient(135deg, #e76a4e, #fba463);
+  transform: scale(1.05);
+}
+
+/* Close Button */
+#closeButton {
+  background: linear-gradient(135deg, #333, #555);
+  color: white;
+}
+#closeButton:hover {
+  background: linear-gradient(135deg, #000, #444);
+  transform: scale(1.05);
+}
+
+/* ===== NEW: TRANSPORT BOOKING SEATS (3D EFFECT) ===== */
+.transport-container {
+  display: grid;
+  grid-template-columns: repeat(4, 60px);
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  perspective: 1000px; /* 3D effect */
+}
+
+.seat {
+  width: 55px;
+  height: 55px;
+  background: #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transform: rotateX(15deg);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.3s, background 0.3s;
+}
+
+.seat.available:hover {
+  background: #90ee90;
+  transform: rotateX(0deg) scale(1.1);
+}
+
+.seat.booked {
+  background: #d9534f;
+  cursor: not-allowed;
+}
+
+/* ===== NEW: VIDEO PLAYER STYLES ===== */
+.travel-video {
+  width: 100%;
+  max-height: 300px;
+  margin-top: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}

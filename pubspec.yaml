@@ -22,4 +22,7 @@ flutter:
   assets:
     - assets/index.html
     - assets/main_page.html
-    - assets/              
+    - assets/about/about.html
+    - assets/about/style3.css
+    - assets/ 
+  
