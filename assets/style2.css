@@ -1,0 +1,203 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: url('hi4.jpg') no-repeat center center/cover;
+  overflow-x: hidden;
+}
+
+/* Header */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 15px 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
+}
+
+.logo {
+  font-size: 1.5em;
+  color: aqua;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 1.8em;
+  color: white;
+  cursor: pointer;
+}
+
+.navigation {
+  display: flex;
+  gap: 20px;
+}
+
+.navigation a,
+.navigation .btnLogin-popup {
+  color: white;
+  text-decoration: none;
+  padding: 6px 10px;
+  background-color: black;
+  border-radius: 5px;
+  font-size: 1em;
+  border: none;
+  cursor: pointer;
+}
+
+.navigation .btnLogin-popup {
+  border: 2px solid white;
+  background: transparent;
+  transition: 0.3s;
+}
+
+.navigation .btnLogin-popup:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Sidebar (Mobile) */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .navigation {
+    position: fixed;
+    top: 70px;
+    right: -100%;
+    background: #111;
+    flex-direction: column;
+    width: 200px;
+    height: 100vh;
+    padding-top: 20px;
+    transition: right 0.3s ease;
+    gap: 10px;
+    z-index: 1002;;
+  }
+
+  .navigation.active {
+    right: 0;
+  }
+
+  .navigation a,
+  .navigation .btnLogin-popup {
+    font-size: 0.95em;
+    padding: 8px 12px;
+  }
+}
+.wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  display: none;
+}
+
+.wrapper.active-popup {
+  display: block;
+}
+
+.wrapper .form-box {
+  display: none;
+}
+
+.wrapper.active .register {
+  display: block;
+}
+
+.wrapper:not(.active) .login {
+  display: block;
+}
+
+.wrapper .form-box h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #162938;
+}
+
+/* Input boxes */
+.input-box {
+  margin: 20px 0;
+  position: relative;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 10px 35px 10px 10px;
+  border: none;
+  border-bottom: 2px solid #162938;
+  background: transparent;
+  color: #162938;
+}
+
+.input-box label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #162938;
+  transition: 0.3s;
+}
+
+.input-box input:focus ~ label,
+.input-box input:valid ~ label {
+  top: -8px;
+  font-size: 0.8em;
+}
+
+.input-box .icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #162938;
+}
+
+/* Button */
+.btn {
+  width: 100%;
+  padding: 10px;
+  background: #162938;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0e1a2b;
+}
+
+.remember-forgot,
+.login-register {
+  font-size: 0.9em;
+  color: #162938;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-register p {
+  width: 100%;
+  text-align: center;
+}
