@@ -36,27 +36,73 @@ menuIcon.addEventListener('click', () => {
     nav.classList.toggle('active');
 });
 
-// Login check
+// Login check - calls the real Flask backend
 loginButton.addEventListener("click", function(e) {
     e.preventDefault();
 
-    const emailid = emailInput.value.trim(); 
-    const password = passwordInput.value.trim(); 
+    const emailid = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const errorBox = document.getElementById('login-error');
+    errorBox.textContent = '';
 
     if (!emailid || !password) {
-        alert("Please enter both email and password.");
+        errorBox.textContent = "Please enter both email and password.";
         return;
     }
 
-    if (emailid === "abc@gmail.com" && password === "123456") {
-        window.location.href = "main_page.html";
-    } else {
-        alert("Invalid email or password.");
-    }
+    fetch(`${window.API_BASE_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailid, password: password })
+    })
+        .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+        .then(({ ok, data }) => {
+            if (!ok) {
+                errorBox.textContent = data.error || "Login failed.";
+                return;
+            }
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userEmail', data.email);
+            localStorage.setItem('userName', data.name || '');
+            window.location.href = "main_page.html";
+        })
+        .catch(() => {
+            errorBox.textContent = "Could not reach the server. Is the backend running?";
+        });
 });
 
-// On register submit
+// On register submit - creates a real account via the Flask backend
 registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    window.location.href = "main_page.html";
+
+    const username = document.querySelector('input[name="username"]').value.trim();
+    const regEmail = document.querySelector('input[name="reg-email"]').value.trim();
+    const regPass = document.querySelector('input[name="reg-pass"]').value.trim();
+    const errorBox = document.getElementById('register-error');
+    errorBox.textContent = '';
+
+    if (!username || !regEmail || !regPass) {
+        errorBox.textContent = "Please fill in all fields.";
+        return;
+    }
+
+    fetch(`${window.API_BASE_URL}/api/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: username, email: regEmail, password: regPass })
+    })
+        .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+        .then(({ ok, data }) => {
+            if (!ok) {
+                errorBox.textContent = data.error || "Registration failed.";
+                return;
+            }
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userEmail', data.email);
+            localStorage.setItem('userName', data.name || '');
+            window.location.href = "main_page.html";
+        })
+        .catch(() => {
+            errorBox.textContent = "Could not reach the server. Is the backend running?";
+        });
 });

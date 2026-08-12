@@ -1,0 +1,1 @@
+window.API_BASE_URL = "http://10.36.99.123:5000";

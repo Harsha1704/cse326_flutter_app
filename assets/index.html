@@ -41,7 +41,8 @@
           <a href="#">Forgot Password?</a>
         </div>
         <button type="submit" class="btn">Login</button>
-        
+        <div id="login-error" style="color:#ff6b6b; text-align:center; margin-top:5px;"></div>
+
         <!-- Google Sign-In button -->
         <div id="g_id_onload"
              data-client_id="YOUR_GOOGLE_CLIENT_ID"
@@ -73,19 +74,20 @@
       <form action="#">
         <div class="input-box">
           <span class="icon"><ion-icon name="person"></ion-icon></span>
-          <input type="text" required />
+          <input type="text" name="username" required />
           <label>Username</label>
         </div>
         <div class="input-box">
           <span class="icon"><ion-icon name="mail"></ion-icon></span>
-          <input type="email" required />
+          <input type="email" name="reg-email" required />
           <label>Email</label>
         </div>
         <div class="input-box">
           <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-          <input type="password" required />
+          <input type="password" name="reg-pass" required />
           <label>Password</label>
         </div>
+        <div id="register-error" style="color:#ff6b6b; text-align:center; margin-top:5px;"></div>
         <div class="remember-forgot">
           <label><input type="checkbox" />I agree to terms & conditions</label>
         </div>
@@ -108,15 +110,26 @@
       `;
       document.getElementById("user-info").innerHTML = html;
 
-      // Optional: send to backend
-      // fetch('/api/save-user', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // });
+      // Persist the Google user in our backend and get our own session token
+      fetch(`${window.API_BASE_URL}/api/save-user`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: data.name, email: data.email, picture: data.picture })
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.token) {
+            localStorage.setItem('authToken', result.token);
+            localStorage.setItem('userEmail', result.email);
+            localStorage.setItem('userName', result.name);
+            window.location.href = "main_page.html";
+          }
+        })
+        .catch((err) => console.error('save-user failed:', err));
     }
   </script>
 
+  <script src="config.js"></script>
   <script src="script.js"></script>
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
