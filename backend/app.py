@@ -146,6 +146,20 @@ def save_user():
     return jsonify({"token": token, "name": name, "email": email}), 200
 
 
+@app.route("/api/chatbot", methods=["POST"])
+def chatbot():
+    from chatbot import ask_chatbot
+ 
+    data = request.get_json(force=True) or {}
+    message = (data.get("message") or "").strip()
+    history = data.get("history") or []  # list of {"role": "user"/"model", "text": "..."}
+ 
+    if not message:
+        return jsonify({"error": "Message is required"}), 400
+ 
+    reply, matched_states = ask_chatbot(message, history)
+    return jsonify({"reply": reply, "matched_states": matched_states}), 200
+
 @app.route("/api/me", methods=["GET"])
 def me():
     auth_header = request.headers.get("Authorization", "")
